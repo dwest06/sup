@@ -86,6 +86,13 @@ def install_nginx():
     os.system("sudo systemctl status nginx")
     print("Nginx Installed")
 
+def add_ssl():
+    print("Installing Certbot")
+    os.system("sudo snap install --classic certbot")
+    os.system("sudo ln -s /snap/bin/certbot /usr/bin/certbot")
+    print("Certbot installed")
+
+    print("\nIMPORTANT: Run sudo certbot --nginx -d url.com -d www.url.com to asociate ssl certificate\n")
 
 def secondary_menu():
     options = ["Install Docker", "Install Unzip", "Install AWS CLI", "Exit"]
