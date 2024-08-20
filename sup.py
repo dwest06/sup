@@ -5,6 +5,8 @@ import shutil
 import distro
 from simple_term_menu import TerminalMenu
 
+from network import scan_ports, scan_all_ports, ping_host
+
 def is_installed(program):
     return shutil.which(program) is not None
 
@@ -95,9 +97,9 @@ def add_ssl():
     print("\nIMPORTANT: Run sudo certbot --nginx -d url.com -d www.url.com to asociate ssl certificate\n")
 
 def secondary_menu():
-    options = ["Install Docker", "Install Unzip", "Install AWS CLI", "Exit"]
+    options = ["Install Docker", "Install Unzip", "Install AWS CLI", "Scan Ports", "Exit"]
     terminal_menu = TerminalMenu(options)
-    
+
     while True:
         menu_entry_index = terminal_menu.show()
         choice = options[menu_entry_index]
@@ -108,29 +110,46 @@ def secondary_menu():
             install_unzip()
         elif choice == "Install AWS CLI":
             install_aws_cli()
+        elif choice == "Scan Ports":
+            ports = input("Ports Number separated by comma: ")
+            ports = ports.replace(" ", "").split(",")
+            if ports is not None:
+                ports = [int(port) for port in ports]
+                scan_ports(ports=ports)
+            else:
+                print("Needed almost 1 port")
         elif choice == "Exit":
             print("Returning to the main menu...")
             break
 
 def main_menu():
-    options = ["Update Ubuntu", "Raise New Server", "More Options", "Exit"]
+    options = ["Update Ubuntu", "Raise New Server", "Install Nginx", "Scan All Ports", "Ping Host", "More Options", "Exit"]
     terminal_menu = TerminalMenu(options)
     
     while True:
         menu_entry_index = terminal_menu.show()
         choice = options[menu_entry_index]
-        
+
         if choice == "Update Ubuntu":
             update_ubuntu()
         elif choice == "Raise New Server":
             raise_new_server()
         elif choice == "Install Nginx":
             install_nginx()
+        elif choice == "Scan All Ports":
+            scan_all_ports()
+        elif choice == "Ping Host":
+            host = input("Host (Optionally): ")
+            if not host:
+                ping_host()
+            else:
+                ping_host(host=host)
         elif choice == "More Options":
             secondary_menu()
         elif choice == "Exit":
             print("Exiting the script...")
             sys.exit()
+
 
 def main():
     print_system_info()
